@@ -11,11 +11,12 @@
             {
                 $lat=$_POST['lat'];
                 $lon=$_POST['lon'];
+                $photoid=$_POST['pid'];
                 $filename = $_FILES['uploadfile']['name'];
                 $tempname = $_FILES['uploadfile']['tmp_name'];
                 $folder = "./image/" . $filename;
 
-                $sql = "INSERT INTO images (lat,lon,image) VALUES ('$lat','$lon','$filename')";
+                $sql = "INSERT INTO images (lat,lon,image,pid) VALUES ('$lat','$lon','$filename','$photoid')";
 
                 mysqli_query($conn, $sql);
 
@@ -64,7 +65,7 @@
                 <td><labe>Photo ID</labe></td>
                 <td><input type="text"  name="pid" placeholder="Enter Photo ID" id="pid" required></td>
             </tr>
-            
+
             <tr>
                 <td><labe>Latitude</labe></td>
                 <td><input type="number" step="0.000001" name="lat" placeholder="Enter Latitude" id="latitude" required></td>
@@ -77,4 +78,14 @@
             
 
             <tr>
-                <td><labe>Upload Photo</labe></td
+                <td><labe>Upload Photo</labe></td>
+                <td><input type="file" name="uploadfile"></td>
+            </tr>
+        </table>
+        
+        <input type="submit" name="submit" value="Upload">
+    </form>
+
+    </center>
+</body>
+</html>

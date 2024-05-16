@@ -1,0 +1,80 @@
+<?php
+// Database configuration
+$dbHost     = "localhost";
+$dbUsername = "root";
+$dbPassword = "";
+$dbName     = "test1";
+$lang=0;
+$long=0;
+
+// Create database connection
+$db = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
+
+// Check connection
+if ($db->connect_error) {
+    die("Connection failed: ". $db->connect_error);
+}
+
+// Upload image to database
+ if (isset($_POST['submit'])) {
+    $image = $_FILES['image']['tmp_name'];
+    $imgContent = addslashes(file_get_contents($image));
+    $lat=$_POST['lat'];
+    $lon=$_POST['lon'];
+
+    $insertImage = "INSERT INTO images (image) VALUES ('$imgContent','$lat','$lon')";
+    $db->query($insertImage);
+
+    if ($db->affected_rows > 0) {
+        echo "Image uploaded successfully!";
+    } else {
+        echo "Failed to upload image!";
+    }
+}
+
+
+
+if($lang==1 && $long==1)
+{
+    $result = $db->query("SELECT image FROM images ORDER BY id DESC LIMIT 1");
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $imageData = $row['image'];
+    echo '<img src="data:image/jpeg;base64,'. base64_encode($imageData). '" alt="Uploaded Image" style="max-width: 500px;">';
+} else {
+    echo 'No image uploaded yet.';
+}
+}
+
+$db->close();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Image to Database</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+
+        <table border="1">
+            <tr>
+                <td><labe>Latitude</labe></td>
+                <td><input type="number" step="0.000001" name="lat" placeholder="Enter Latitude" required></td>
+            </tr>
+            
+            <tr>
+                <td><labe>Longitude</labe></td>
+                <td><input type="number" step="0.000001" name="long" placeholder="Enter Longitude" required></td>
+            </tr>
+
+            <tr>
+                <td><labe>Upload Photo</labe></td>
+                <td><input type="file" name="image"></td>
+            </tr>
+        </table>
+        
+        <input type="submit" name="submit" value="Upload">
+    </form>
+</body>
+</html>
